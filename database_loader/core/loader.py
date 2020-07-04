@@ -8,7 +8,7 @@ import sys
 from enum import Enum
 import pandas
 import numpy
-from .databases.builder import CursorBuilder
+from database_loader.core.databases.builder import CursorBuilder
 
 import pkg_resources  # part of setuptools
 
