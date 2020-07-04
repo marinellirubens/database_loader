@@ -5,8 +5,8 @@ import sys
 from enum import Enum
 import pandas
 import numpy
-from ..core.databases.builder import CursorBuilder
-from ..core.databases.database import ConnectionType, SelectDatabase
+from .databases.builder import CursorBuilder
+from .databases.database import ConnectionType, SelectDatabase
 
 import pkg_resources  # part of setuptools
 

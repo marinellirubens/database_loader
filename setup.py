@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='database_loader',
-    version='1.0.14',
+    version='1.0.15',
     packages=['database_loader', 'database_loader.core'],
     url='',
     license='',
