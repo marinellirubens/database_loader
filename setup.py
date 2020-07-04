@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name='database_loader',
-    version='1.0.17',
-    packages=['database_loader', 'database_loader.core'],
+    version='1.0.18',
+    packages=['database_loader', 'database_loader.core', 'database_loader.core.databases'],
     url='',
     license='',
     author='rubens.ferreira',
