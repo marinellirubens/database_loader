@@ -10,8 +10,8 @@ setup(
     author_email='rubens.ferreira@lgcns.com',
     description='Loader for oracle database',
     install_requires=[
-        'pandas==1.0.5',
+        'pandas',
         #'cx-Oracle==7.3.0',
-        'SQLAlchemy==1.3.18'
+        'SQLAlchemy'
     ]
 )
