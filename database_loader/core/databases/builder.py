@@ -1,28 +1,69 @@
-from enum import Enum
+from database_loader.core.databases.database import SelectDatabase, ConnectionType, Database
 
-class Database(Enum):
-    ORACLE = 'ORACLE'
-    MYSQL = 'MYSQL'
 
-class ConnectionType(Enum):
-    DNS = 'DNS'
-    CONNECTION_STRING = 'STRING'
-
-class DabaseBuilder:
+class CursorBuilder:
     def __init__(self):
         pass
 
-    def set_database_type(self, database_type: Database = Database.ORACLE):
-        pass
+    def set_database_type(self, database: Database = SelectDatabase.ORACLE):
+        """
 
-    def set_conection_type(self, connection_type: ConnectionType = ConnectionType.CONNECTION_STRING):
-        pass
+        :param database:
+        """
+        self.database = database.value
+        return self
+
+    def set_connection_type(self, connection_type: ConnectionType = ConnectionType.CONNECTION_STRING):
+        """
+
+        :param connection_type:
+        """
+        self.connection_type = connection_type.value
+        return self
+
+    def set_connection_string(self, database_name: str, user: str, password, host: str, port: str):
+        if self.connection_type == ConnectionType.TNS.value:
+            self.set_query_string(database_name, user, password, host, port)
+        else:
+            self.set_tns_info(database_name, user, password)
+        return self
 
     def set_query_string(self, database_name: str, user: str, password, host: str, port: str):
-        pass
+        """
 
-    def set_dns_info(self, database_name: str, user: str, password):
-        pass
+        :param database_name:
+        :param user:
+        :param password:
+        :param host:
+        :param port:
+        """
+        self.database_name = database_name
+        self.user = user
+        self.password = password
+        self.host = host
+        self.port = port
+        return self
+
+    def set_tns_info(self, database_name: str, user: str, password):
+        """
+
+        :param database_name:
+        :param user:
+        :param password:
+        """
+        self.database_name = database_name
+        self.user = user
+        self.password = password
+        return self
+
+    def set_table_info(self, table_name: str, columns: str):
+        self.table_name = table_name
+        self.columns = columns
+        return self
 
     def build(self):
-        return None
+        if self.connection_type == ConnectionType.TNS.value:
+            self.database.set_connection_by_tns(self.database_name, self.user, self.password)
+        else:
+            self.database.set_connection_by_connection_string(self.user, self.password, self.host, self.host, self.database_name)
+        return self.database.get_cursor(self.table_name, self.columns)
