@@ -69,7 +69,8 @@ $ python -m database_loader --version
 databaseloader version: 1.0.27
 ```
 
-### Loading files on Oracle database 
+### Loading files on Oracle database
+Executed on `linux`  
 ```console
 $ python -m database_loader --database TESTDB \
                             --user root \
@@ -78,5 +79,17 @@ $ python -m database_loader --database TESTDB \
                             --file C:\insert_files\insert.tsv \
                             --commit 5000 \
                             --type TSV \
+                            --clean
+```
+
+Executed on `windows`
+```console
+$ python -m database_loader --database TESTDB ^
+                            --user root ^
+                            --password"123456" ^
+                            --table tb_salary ^
+                            --file C:\insert_files\insert.tsv ^
+                            --commit 5000 ^
+                            --type TSV ^
                             --clean
 ```
