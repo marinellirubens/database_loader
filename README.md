@@ -51,7 +51,15 @@ optional arguments:
   -p PASSWORD, --password PASSWORD
                         Database Password
   -T TYPE, --type TYPE  Types CSV, EXCEL, TSV
-  -V, --version         Types CSV, EXCEL, TSV
+  -V, --version         Show version
+  -B DATABASE_TYPE, --database_type DATABASE_TYPE
+                        Database type [ORACLE, MYSQL]
+  -C CONNECTION_TYPE, --connection_type CONNECTION_TYPE
+                        Connection type [TNS, STRING]
+  -H HOST, --host HOST  Database host
+  -P PORT, --port PORT  Database port
+
+Process finished with exit code 0
 ```
 
 ## How to use database_loader
