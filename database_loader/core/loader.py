@@ -125,9 +125,10 @@ def print_version():
 def main():
     """Main method for the insert"""
     options = get_arguments(sys.argv[1:])
-
+    print(options)
     if options.version:
         print_version()
+        exit(0)
 
     loader = Loader(host=options.host,
                     port=options.port,
