@@ -48,10 +48,10 @@ class Loader:
         self.host = host
         self.port = port
 
-    def read_file(self, file_name, directory='.', reader=ReaderType.TSV):
+    def read_file(self, file_name, reader=ReaderType.TSV):
         """Reads the file content"""
-        file_path = os.path.join(directory, file_name)
-        self.data_frame = reader(file_path).replace(to_replace=numpy.nan, value='')
+        # file_path = os.path.join(directory, file_name)
+        self.data_frame = reader(file_name).replace(to_replace=numpy.nan, value='')
         self.columns = tuple(self.data_frame.columns.values)
 
 
