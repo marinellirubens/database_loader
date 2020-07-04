@@ -133,7 +133,7 @@ class MysqlCursor(Cursor):
             values_template += f'%s, '
         values_template = values_template[:-2]
         self.columns_str = str(self.columns).replace("'", '')
-        self.sql_template = f'insert into {self.table_name} {self.columns_str} ({values_template})'
+        self.sql_template = f'insert into {self.table_name} {self.columns_str} values ({values_template})'
 
     def execute_command(self, sql_string: str):
         self.cursor.execute(sql_string)

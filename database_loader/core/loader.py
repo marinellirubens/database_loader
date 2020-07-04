@@ -5,10 +5,11 @@ import sys
 from enum import Enum
 import pandas
 import numpy
-import cx_Oracle
+from database_loader.core.databases.builder import CursorBuilder
+from database_loader.core.databases.database import ConnectionType, SelectDatabase
 
-# import sqlalchemy
 import pkg_resources  # part of setuptools
+
 
 class ReaderType(Enum):
     """Enum to contain the reader types"""
@@ -28,67 +29,64 @@ class Loader:
     :param user: user name
     :param password: user password
     """
-    def __init__(self, commit_amount: int = 1000, table_name: str = '', printer: bool = False,
-                 clean_table: bool = False, database: str = None, user: str = None, password: str = None):
-        self.commit_amount = commit_amount
+
+    def __init__(self, host: str = '', port: str = '', commit_amount: int = 1000, table_name: str = '', printer: bool = False,
+                 clean_table: bool = False, database: str = None, user: str = None,
+                 password: str = None, database_type: str = 'ORACLE', connection_type: str = 'TNS'):
+        self.commit_amount = int(commit_amount)
         self.table_name = table_name
         self.printer = printer
         self.clean = clean_table
         self.data_frame = None
-        self.dns = database
+        self.tns = database
         self.user = user
         self.password = password
+        self.database_type = database_type
+        self.connection_type = connection_type
+        self.host = host
+        self.port = port
 
     def read_file(self, file_name, directory='.', reader=ReaderType.TSV):
         """Reads the file content"""
         file_path = os.path.join(directory, file_name)
         self.data_frame = reader(file_path).replace(to_replace=numpy.nan, value='')
+        self.columns = tuple(self.data_frame.columns.values)
 
-    def get_conection(self):
+
+    def get_cursor(self):
         """Returns the connection with oracle"""
-        # dsn = cx_Oracle.makedsn("204.79.148.141", 1526, service_name="BRTMSP")
-        # connection = cx_Oracle.connect("tms_if", "mgri2tmbr", dsn, encoding="UTF-8")
-        return cx_Oracle.connect(self.user, self.password, self.dns, encoding="UTF-8")
-
-    def clean_table(self):
-        """Wipes the data from the table"""
-        connection = self.get_conection()
-        cursor = connection.cursor()
-        cursor.execute(f'truncate table {self.table_name}')
-        connection.close()
+        connection = eval(f'ConnectionType.{self.connection_type}')
+        cursor = CursorBuilder()\
+            .set_database_type(eval(f'SelectDatabase.{self.database_type}'))\
+            .set_connection_type(connection)\
+            .set_connection_string(self.tns, self.user, self.password, self.host, self.port)\
+            .set_table_info(self.table_name, self.columns)\
+            .build()
+        return cursor
 
     def load_into_database(self):
         """Loads the information into the table"""
+        cursor = self.get_cursor()
         if self.clean:
-            self.clean_table()
+            cursor.clean_table()
 
-        connection = self.get_conection()
-        cursor = connection.cursor()
-        columns = tuple(self.data_frame.columns.values)
-        columns_str = str(columns).replace("'", '')
-        insert_sql = 'insert all\n'
-
+        insert_values = []
         for index, row in self.data_frame.iterrows():
             values = []
-            for column_name in columns:
+            for column_name in self.columns:
                 values.append(row[column_name])
 
-            insert_sql += f'into {self.table_name} {columns_str} values {tuple(values)}\n'
+            insert_values.append(tuple(values))
 
             if (index + 1) % self.commit_amount == 0 and index > 0:
-                if self.printer:
-                    print(f'Inseridos {index + 1} registros na tabela {self.table_name}')
-
-                insert_sql += f'select * from dual'
-                cursor.execute(insert_sql)
-                cursor.execute("commit")
-                insert_sql = 'insert all\n'
+                cursor.executemany_inserts(insert_values)
+                cursor.execute_command("commit")
+                insert_values = []
             # break
-        if insert_sql != 'insert all\n':
-            insert_sql += f'select * from dual'
-            cursor.execute(insert_sql)
-            cursor.execute("commit")
-        connection.close()
+        if insert_values:
+            cursor.executemany_inserts(insert_values)
+            cursor.execute_command("commit")
+        cursor.close()
 
 
 def get_arguments(args: list = sys.argv[1:]):
@@ -106,8 +104,12 @@ def get_arguments(args: list = sys.argv[1:]):
     parser.add_argument('-f', '--file_load', help='File to be load on the table', action='store', type=str)
     parser.add_argument('-u', '--user', help='Database User', action='store', type=str)
     parser.add_argument('-p', '--password', help='Database Password', action='store', type=str)
-    parser.add_argument('-T', '--type', help='Types CSV, EXCEL, TSV', action='store', type=str)
-    parser.add_argument('-V', '--version', help='Types CSV, EXCEL, TSV', action='store_true')
+    parser.add_argument('-T', '--type', help='Types CSV, EXCEL, TSV', action='store', type=str, default="TSV")
+    parser.add_argument('-V', '--version', help='Show version', action='store_true')
+    parser.add_argument('-B', '--database_type', help='Database type [ORACLE, MYSQL]', action='store', type=str, default="ORACLE")
+    parser.add_argument('-C', '--connection_type', help='Connection type [TNS, STRING]', action='store', type=str, default="TNS")
+    parser.add_argument('-H', '--host', help='Database host', action='store', type=str)
+    parser.add_argument('-P', '--port', help='Database port', action='store', type=str)
     options = parser.parse_args(args)
     return options
 
@@ -125,10 +127,20 @@ def main():
     if options.version:
         print_version()
 
-    loader = Loader(options.commit, table_name=options.table, printer=options.verbose, clean_table=options.clean, database=options.database, user=options.user, password=options.password)
+    loader = Loader(host=options.host,
+                    port=options.port,
+                    commit_amount=options.commit,
+                    table_name=options.table,
+                    printer=options.verbose,
+                    clean_table=options.clean,
+                    database=options.database,
+                    user=options.user,
+                    password=options.password,
+                    database_type=options.database_type,
+                    connection_type=options.connection_type)
+
     loader.read_file(file_name=options.file_load, reader=eval(f'ReaderType.{options.type}'))
     loader.load_into_database()
-
 
 if __name__ == '__main__':
     main()
