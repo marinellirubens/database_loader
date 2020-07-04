@@ -1,5 +1,4 @@
-from database_loader.core.databases.database import SelectDatabase, ConnectionType, Database
-
+from ..databases.database import SelectDatabase, ConnectionType, Database
 
 class CursorBuilder:
     def __init__(self):
