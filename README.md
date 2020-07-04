@@ -22,10 +22,13 @@ $ python -m pip install pip install git+https://github.com/marinellirubens/datab
 In order for database_loader to work you will have to install the appropriate database driver.
 
 - Oracle: cx-Oracle version 7.0.0+
+- mysql-connector-python
 
 You can install this drivers via ``pip``:
-
-    $ python3 -m pip install cx-Oracle
+```console
+$ python -m pip install cx-Oracle
+$ python -m pip install mysql-connector-python
+````
 
 ## Usage
 ```console
@@ -69,7 +72,19 @@ $ python -m database_loader --version
 databaseloader version: 1.0.27
 ```
 
-### Loading files on Oracle database
+### Loading files on Oracle database by TNSNAME
+Executed on `windows`
+```console
+$ python -m database_loader --database TESTDB ^
+                            --user root ^
+                            --password"123456" ^
+                            --table tb_salary ^
+                            --file C:\insert_files\insert.tsv ^
+                            --commit 5000 ^
+                            --type TSV ^
+                            --clean
+```
+
 Executed on `linux`  
 ```console
 $ python -m database_loader --database TESTDB \
@@ -82,14 +97,35 @@ $ python -m database_loader --database TESTDB \
                             --clean
 ```
 
+
+### Loading files on Oracle database by Connection String
 Executed on `windows`
 ```console
-$ python -m database_loader --database TESTDB ^
+$ python -m database_loader --connection STRING ^
+                            --database TESTDB ^
+                            --host 192.168.15.168 ^
+                            --port 1601 ^
                             --user root ^
-                            --password"123456" ^
+                            --database_type ORACLE ^
                             --table tb_salary ^
                             --file C:\insert_files\insert.tsv ^
                             --commit 5000 ^
                             --type TSV ^
+                            --clean
+```
+
+Executed on `linux`  
+```console
+$ python -m database_loader --connection STRING \
+                            --database TESTDB \
+                            --host 192.168.15.168 \
+                            --port 1601 \
+                            --user root \
+                            --database_type ORACLE \
+                            --password"123456" \
+                            --table tb_salary \
+                            --file /insert_files/insert.tsv \
+                            --commit 5000 \
+                            --type TSV \
                             --clean
 ```
