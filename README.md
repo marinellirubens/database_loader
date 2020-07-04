@@ -16,7 +16,7 @@ It identify the field from the header fields, so those fields are used to map th
 ## Instalation
 You can install database_loader  by cloning this Git repository
 ```shell script
-$ python -m pip install pip install git+https://github.com/marinellirubens/database_loader#egg=database_loader==1.0.26
+$ python -m pip install pip install git+https://github.com/marinellirubens/database_loader#egg=database_loader==1.0.27
 ```
 
 In order for database_loader to work you will have to install the appropriate database driver.
@@ -63,5 +63,20 @@ Process finished with exit code 0
 ```
 
 ## How to use database_loader
-### Loading files on database 
+### Check Version
+```console
+$ python -m database_loader --version
+databaseloader version: 1.0.27
+```
 
+### Loading files on Oracle database 
+```console
+$ python -m database_loader --database TESTDB \
+                            --user root \
+                            --password"123456" \
+                            --table tb_salary \
+                            --file C:\insert_files\insert.tsv \
+                            --commit 5000 \
+                            --type TSV \
+                            --clean
+```

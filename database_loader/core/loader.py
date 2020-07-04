@@ -117,8 +117,8 @@ def get_arguments(args: list = sys.argv[1:]):
 
 
 def print_version():
-    version = pkg_resources.require("databaseloader")[0].version
-    print(f'databaseloader version: {version}')
+    version = pkg_resources.require("database_loader")[0].version
+    print(f'database_loader version: {version}')
     exit(0)
 
 
