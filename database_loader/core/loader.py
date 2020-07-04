@@ -124,11 +124,9 @@ def main():
 
     if options.version:
         print_version()
-    print(options.type)
-    # os.chdir('C:\RBS\RBS\Chamados\TMS\IBATMS-1868')
-    #  -t tmp_rbs_occur_sem_canhoto -d oracle -f C:\RBS\RBS\Chamados\TMS\IBATMS-1868\insert.tsv
+
     loader = Loader(options.commit, table_name=options.table, printer=options.verbose, clean_table=options.clean, database=options.database, user=options.user, password=options.password)
-    loader.read_file(file_name=options.file_load, readertype=eval(f'ReaderType.{options.type}'))
+    loader.read_file(file_name=options.file_load, reader=eval(f'ReaderType.{options.type}'))
     loader.load_into_database()
 
 
