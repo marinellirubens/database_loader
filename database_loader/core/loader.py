@@ -1,4 +1,7 @@
 """Module to load data"""
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
 import os
 import argparse
 import sys
@@ -6,7 +9,6 @@ from enum import Enum
 import pandas
 import numpy
 from .databases.builder import CursorBuilder
-from .databases.database import ConnectionType, SelectDatabase
 
 import pkg_resources  # part of setuptools
 

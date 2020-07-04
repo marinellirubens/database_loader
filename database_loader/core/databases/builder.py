@@ -1,4 +1,8 @@
-from .database import SelectDatabase, ConnectionType, Database
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
+from database_loader.core.databases.database import SelectDatabase, ConnectionType, Database
+
 
 class CursorBuilder:
     def __init__(self):
