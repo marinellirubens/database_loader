@@ -6,6 +6,7 @@ from enum import Enum
 import pandas
 import numpy
 import cx_Oracle
+
 # import sqlalchemy
 import pkg_resources  # part of setuptools
 
