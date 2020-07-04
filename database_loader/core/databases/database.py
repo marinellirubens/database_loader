@@ -58,8 +58,8 @@ class Cursor:
 class OracleDatabase(Database):
     def __init__(self):
         super().__init__()
-        import cx_Oracle
-        self.database = cx_Oracle
+        eval('import cx_Oracle')
+        self.database = eval('cx_Oracle')
         self.cursor = Cursor()
 
     def set_connection_by_tns(self, tns: str, user: str, password: str):
@@ -108,8 +108,8 @@ class OracleCursor(Cursor):
 class MysqlDatabase(Database):
     def __init__(self):
         super().__init__()
-        import mysql.connector
-        self.database = mysql.connector
+        eval('import mysql.connector')
+        self.database = eval('mysql.connector')
 
     def set_connection_by_connection_string(self, user: str, password: str, host: str, port: str, service_name: str):
         self.connection = self.database.connector.connect(host=host,
