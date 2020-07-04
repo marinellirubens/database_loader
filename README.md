@@ -1,21 +1,19 @@
-Database Loader
-===
+# Database Loader
 `database_loader` is a module to load information to a database table.
 It identify the field from the header fields, so those fields are used to map the table columns 
 
 
-Supported Databases:
---- 
+## Supported Databases:
  - Oracle
 
 
-Formats supported:
----
+## Formats supported:
  - EXCEL
  - CSV
  - TSV
 
-###Instalation
+
+## Instalation
 You can install database_loader  by cloning this Git repository
 ```shell script
 $ python -m pip install pip install git+https://github.com/marinellirubens/database_loader#egg=database_loader
@@ -29,23 +27,33 @@ You can install this drivers via ``pip``:
 
     $ python3 -m pip install cx-Oracle
 
-Usage
----
+## Usage
 ```console
-$ ./csv2db -h
-usage: csv2db [-h] {generate,gen,load,lo} ...
+$ python -m database_loader -h
+usage: __main__.py [-h] [-c COMMIT] [-t TABLE] [-v] [-l] [-d DATABASE] [-f FILE_LOAD] [-u USER] [-p PASSWORD]
+                   [-T TYPE] [-V]
 
-The CSV to database command line loader.
-Version: 1.5.1
-(c) Gerald Venzl
-
-positional arguments:
-  {generate,gen,load,lo}
-    generate (gen)      Prints a CREATE TABLE SQL statement to create the
-                        table and columns based on the header row of the CSV
-                        file(s).
-    load (lo)           Loads the data from the CSV file(s) into the database.
+Parses command.
 
 optional arguments:
   -h, --help            show this help message and exit
+  -c COMMIT, --commit COMMIT
+                        Commit every X lines.
+  -t TABLE, --table TABLE
+                        Table name.
+  -v, --verbose         Prints information.
+  -l, --clean           Clean table before inserts.
+  -d DATABASE, --database DATABASE
+                        Database TNS.
+  -f FILE_LOAD, --file_load FILE_LOAD
+                        File to be load on the table
+  -u USER, --user USER  Database User
+  -p PASSWORD, --password PASSWORD
+                        Database Password
+  -T TYPE, --type TYPE  Types CSV, EXCEL, TSV
+  -V, --version         Types CSV, EXCEL, TSV
 ```
+
+## How to use database_loader
+### Loading files on database 
+
