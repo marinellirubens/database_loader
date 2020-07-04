@@ -9,7 +9,7 @@ from enum import Enum
 import pandas
 import numpy
 from database_loader.core.databases.builder import CursorBuilder
-from database_loader.core.databases.database import ConnectionType
+from database_loader.core.databases.database import ConnectionType, SelectDatabase
 import pkg_resources  # part of setuptools
 
 
