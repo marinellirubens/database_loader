@@ -13,7 +13,7 @@ class CursorBuilder:
 
         :param database:
         """
-        self.database = database.value
+        self.database = eval(database.value)
         return self
 
     def set_connection_type(self, connection_type: ConnectionType = ConnectionType.CONNECTION_STRING):

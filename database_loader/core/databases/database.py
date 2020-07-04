@@ -146,5 +146,5 @@ class MysqlCursor(Cursor):
 
 
 class SelectDatabase(Enum):
-    ORACLE = OracleDatabase()
-    MYSQL = MysqlDatabase()
+    ORACLE = 'OracleDatabase()'
+    MYSQL = 'MysqlDatabase()'
