@@ -93,7 +93,9 @@ class OracleCursor(Cursor):
         for index, column in enumerate(self.columns):
             values_template += f':{index + 1}, '
         values_template = values_template[:-2]
+        self.columns_str = self.columns_str.replace(',)', ')')
         self.columns_str = str(self.columns).replace("'", '"')
+
         self.sql_template = f'insert into {self.table_name} {self.columns_str} values ({values_template})'
 
     def execute_command(self, sql_string: str):
@@ -136,6 +138,7 @@ class MysqlCursor(Cursor):
             values_template += f'%s, '
         values_template = values_template[:-2]
         self.columns_str = str(self.columns).replace("'", '')
+        self.columns_str = self.columns_str.replace(',)', ')')
         self.sql_template = f'insert into {self.table_name} {self.columns_str} values ({values_template})'
 
     def execute_command(self, sql_string: str):
