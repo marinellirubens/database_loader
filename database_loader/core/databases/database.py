@@ -7,7 +7,7 @@ from enum import Enum
 
 class ConnectionType(Enum):
     TNS = 'TNS'
-    CONNECTION_STRING = 'STRING'
+    STRING = 'STRING'
 
 
 class Database(ABC):

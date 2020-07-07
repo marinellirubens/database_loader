@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from database_loader.core.databases.database import SelectDatabase, ConnectionType, Database
+from database_loader.core.databases.database import SelectDatabase, ConnectionType, Database, OracleDatabase, MysqlDatabase
 
 
 class CursorBuilder:

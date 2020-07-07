@@ -9,7 +9,7 @@ from enum import Enum
 import pandas
 import numpy
 from database_loader.core.databases.builder import CursorBuilder
-from database_loader.core.databases.database import ConnectionType, SelectDatabase
+from database_loader.core.databases.database import ConnectionType, SelectDatabase, OracleDatabase, MysqlDatabase
 import pkg_resources  # part of setuptools
 
 
@@ -58,12 +58,12 @@ class Loader:
     def get_cursor(self):
         """Returns the connection with oracle"""
         connection = eval(f'ConnectionType.{self.connection_type}')
-        cursor = CursorBuilder()\
-            .set_database_type(eval(f'SelectDatabase.{self.database_type}'))\
-            .set_connection_type(connection)\
-            .set_connection_string(self.tns, self.user, self.password, self.host, self.port)\
-            .set_table_info(self.table_name, self.columns)\
-            .build()
+        cursor_builder = CursorBuilder()
+        cursor_builder.set_database_type(eval(f'SelectDatabase.{self.database_type}'))
+        cursor_builder.set_connection_type(connection)
+        cursor_builder.set_connection_string(self.tns, self.user, self.password, self.host, self.port)
+        cursor_builder.set_table_info(self.table_name, self.columns)
+        cursor = cursor_builder.build()
         return cursor
 
     def load_into_database(self):
@@ -84,11 +84,17 @@ class Loader:
                 cursor.executemany_inserts(insert_values)
                 cursor.execute_command("commit")
                 insert_values = []
+                if self.printer:
+                    print(f'{index + 1} lines inserted on table {self.table_name}')
             # break
         if insert_values:
             cursor.executemany_inserts(insert_values)
             cursor.execute_command("commit")
+            if self.printer:
+                print(f'{index + 1} lines inserted on table {self.table_name}')
+
         cursor.close()
+        print(f'Process Finished!')
 
 
 def get_arguments(args: list = sys.argv[1:]):
