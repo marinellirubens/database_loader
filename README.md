@@ -22,7 +22,7 @@ $ python -m pip install pip install git+https://github.com/marinellirubens/datab
 In order for database_loader to work you will have to install the appropriate database driver.
 
 - Oracle: cx-Oracle version 7.0.0+
-- mysql-connector-python
+- Mysql: mysql-connector-python version 8.0.0+
 
 You can install this drivers via ``pip``:
 ```console
@@ -72,7 +72,7 @@ $ python -m database_loader --version
 databaseloader version: 1.0.27
 ```
 
-### Loading files on Oracle database by TNSNAME
+#### Loading files on Oracle database by TNSNAME
 Executed on `windows`
 ```console
 $ python -m database_loader --database TESTDB ^
@@ -82,6 +82,8 @@ $ python -m database_loader --database TESTDB ^
                             --file C:\insert_files\insert.tsv ^
                             --commit 5000 ^
                             --type TSV ^
+                            --database_type ORACLE ^
+                            --connection_type TNS ^
                             --clean
 ```
 
@@ -94,11 +96,13 @@ $ python -m database_loader --database TESTDB \
                             --file C:\insert_files\insert.tsv \
                             --commit 5000 \
                             --type TSV \
+                            --database_type ORACLE \
+                            --connection_type TNS \
                             --clean
 ```
 
 
-### Loading files on Oracle database by Connection String
+#### Loading files on Oracle database by Connection String
 Executed on `windows`
 ```console
 $ python -m database_loader --connection STRING ^
