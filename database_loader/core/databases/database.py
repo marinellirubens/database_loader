@@ -112,10 +112,10 @@ class MysqlDatabase(Database):
         self.database = eval('mysql.connector')
 
     def set_connection_by_connection_string(self, user: str, password: str, host: str, port: str, service_name: str):
-        self.connection = self.database.connector.connect(host=host,
-                                                          database=service_name,
-                                                          user=user,
-                                                          password=password)
+        self.connection = self.database.connect(host=host,
+                                                database=service_name,
+                                                user=user,
+                                                password=password)
         self.user = user
         self.host = host
 
