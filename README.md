@@ -72,7 +72,7 @@ $ python -m database_loader --version
 databaseloader version: 1.0.27
 ```
 
-#### Loading files on Oracle database by TNSNAME
+#### Loading files on database by TNSNAMES(ORACLE Only)
 Executed on `windows`
 ```console
 $ python -m database_loader --database TESTDB ^
@@ -102,7 +102,7 @@ $ python -m database_loader --database TESTDB \
 ```
 
 
-#### Loading files on Oracle database by Connection String
+#### Loading files on database by Connection String
 Executed on `windows`
 ```console
 $ python -m database_loader --connection STRING ^
