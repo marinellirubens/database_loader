@@ -16,7 +16,7 @@ class CursorBuilder:
         self.database = eval(database.value)
         return self
 
-    def set_connection_type(self, connection_type: ConnectionType = ConnectionType.CONNECTION_STRING):
+    def set_connection_type(self, connection_type: ConnectionType = ConnectionType.STRING):
         """
 
         :param connection_type:
@@ -25,7 +25,7 @@ class CursorBuilder:
         return self
 
     def set_connection_string(self, database_name: str, user: str, password, host: str, port: str):
-        if self.connection_type == ConnectionType.TNS.value:
+        if self.connection_type == ConnectionType.STRING.value:
             self.set_query_string(database_name, user, password, host, port)
         else:
             self.set_tns_info(database_name, user, password)
@@ -68,5 +68,5 @@ class CursorBuilder:
         if self.connection_type == ConnectionType.TNS.value:
             self.database.set_connection_by_tns(self.database_name, self.user, self.password)
         else:
-            self.database.set_connection_by_connection_string(self.user, self.password, self.host, self.host, self.database_name)
+            self.database.set_connection_by_connection_string(self.user, self.password, self.host, self.port, self.database_name)
         return self.database.get_cursor(self.table_name, self.columns)
