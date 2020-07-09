@@ -1,10 +1,16 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from database_loader.core.databases.database import SelectDatabase, ConnectionType, Database, OracleDatabase, MysqlDatabase
+from database_loader.core.databases.database import SelectDatabase, ConnectionType, Database
+from database_loader.core.databases.database import OracleDatabase, MysqlDatabase, Cursor
 
 
 class CursorBuilder:
+    """Builder of the database classes
+
+        Examples:
+
+    """
     def __init__(self):
         pass
 
@@ -60,11 +66,22 @@ class CursorBuilder:
         return self
 
     def set_table_info(self, table_name: str, columns: str):
+        """
+
+        :param table_name:
+        :param columns:
+        :return:
+        """
         self.table_name = table_name
         self.columns = columns
         return self
 
     def build(self):
+        """
+
+        :return: a cursor to interact with the database
+        :rtype: Cursor
+        """
         if self.connection_type == ConnectionType.TNS.value:
             self.database.set_connection_by_tns(self.database_name, self.user, self.password)
         else:
