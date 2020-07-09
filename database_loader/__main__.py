@@ -3,5 +3,10 @@ __metaclass__ = type
 
 from database_loader import core
 
-if __name__ == '__main__':
+
+def main():
     core.loader.main()
+
+
+if __name__ == '__main__':
+    main()
