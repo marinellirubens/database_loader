@@ -2,8 +2,13 @@ from setuptools import setup
 
 setup(
     name='database_loader',
-    version='1.0.30',
+    version='1.0.31',
     packages=['database_loader', 'database_loader.core', 'database_loader.core.databases'],
+    entry_points={
+        "console_scripts": [
+            "database_loader = database_loader.core.loader:main",
+        ]
+    },
     url='',
     license='',
     author='rubens.ferreira',
