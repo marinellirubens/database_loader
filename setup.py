@@ -2,11 +2,11 @@ from setuptools import setup
 
 setup(
     name='database_loader',
-    version='1.0.31',
+    version='1.0.32',
     packages=['database_loader', 'database_loader.core', 'database_loader.core.databases'],
     entry_points={
         "console_scripts": [
-            "database_loader = database_loader.core.loader:main",
+            "database_loader = database_loader.__main__:main",
         ]
     },
     url='',
