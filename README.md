@@ -16,7 +16,7 @@ It identify the field from the header fields, so those fields are used to map th
 ## Instalation
 You can install database_loader  by cloning this Git repository
 ```shell script
-$ python -m pip install pip install git+https://github.com/marinellirubens/database_loader#egg=database_loader==1.0.30  
+$ python -m pip install git+https://github.com/marinellirubens/database_loader#egg=database_loader==1.0.30
 ```
 
 In order for database_loader to work you will have to install the appropriate database driver.
@@ -102,7 +102,7 @@ $ python -m database_loader --database TESTDB \
 ```
 
 
-#### Loading files on database by Connection String
+#### Loading files on Oracle database by Connection String
 Executed on `windows`
 ```console
 $ python -m database_loader --connection STRING ^
