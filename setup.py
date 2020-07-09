@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='database_loader',
-    version='1.0.32',
+    version='1.0.33',
     packages=['database_loader', 'database_loader.core', 'database_loader.core.databases'],
     entry_points={
         "console_scripts": [
