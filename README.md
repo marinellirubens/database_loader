@@ -70,7 +70,7 @@ Process finished with exit code 0
 ### Check Version
 ```console
 $ database_loader --version
-databaseloader version: 1.0.33
+v1.0.33
 ```
 
 #### Loading files on database by TNSNAMES(ORACLE Only)
