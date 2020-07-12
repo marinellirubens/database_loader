@@ -103,8 +103,9 @@ def get_arguments(args: list = sys.argv[1:]):
     :param args: arguments to be parsed
     :return: returns the options parsed
     """
+    # TODO: Include output errors file parameter
     parser = argparse.ArgumentParser(description='Parses command.')
-    parser.add_argument('-c', '--commit', help='Commit every X lines.', action='store', type=str, default=500)
+    parser.add_argument('-c', '--commit', help='Commit every X lines.', action='store', type=int, default=500)
     parser.add_argument('-t', '--table', help='Table name.', action='store', type=str)
     parser.add_argument('-v', '--verbose', help='Prints information.', action='store_true')
     parser.add_argument('-l', '--clean', help='Clean table before inserts.', action='store_true')

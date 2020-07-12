@@ -181,6 +181,7 @@ class OracleCursor(Cursor):
         :type sql_string: str
         """
         self.cursor.execute(sql_string)
+        # TODO: Include errors treatment and log
 
     def executemany_inserts(self, values: list):
         """Execute many inserts on the database
@@ -189,6 +190,7 @@ class OracleCursor(Cursor):
         :type values: list
         """
         self.cursor.executemany(self.sql_template, values)
+        # TODO: Include errors treatment and log
 
 
 class MysqlDatabase(Database):
