@@ -9,14 +9,12 @@ setup(
             "database_loader = database_loader.__main__:main",
         ]
     },
-    url='',
-    license='',
-    author='rubens.ferreira',
-    author_email='rubens.ferreira@lgcns.com',
+    url='https://github.com/marinellirubens/database_loader',
+    author='Rubens Marinelli Ferreira',
+    author_email='marinelli.rubens@gmail.com',
     description='Loader for oracle database',
     install_requires=[
         'pandas',
-        #'cx-Oracle==7.3.0',
         'SQLAlchemy'
     ]
 )
