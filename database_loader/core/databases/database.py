@@ -20,7 +20,7 @@ class SelectDatabase(Enum):
 class Database(ABC):
     """Database adaptor abstract class"""
     def __init__(self):
-        self.cursor = Cursor(self)
+        self.cursor = None
 
     def set_connection_by_tns(self, *args, **kargs):
         """set the connection by TNS (Only works on Oracle), returns error if this method is not implemented"""
@@ -96,7 +96,7 @@ class OracleDatabase(Database):
         super().__init__()
         exec('import cx_Oracle')
         self.database = eval('cx_Oracle')
-        self.cursor = Cursor()
+        # self.cursor = Cursor()
 
     def set_connection_by_tns(self, tns: str, user: str, password: str):
         """Set the connection with and Oracle database using the TNSNAMES file
@@ -162,6 +162,7 @@ class OracleCursor(Cursor):
     def __init__(self, database: OracleDatabase, table_name: str, columns: tuple):
         super().__init__(database, table_name, columns)
         self.cursor = self.database.cursor()
+        self.columns_str = ''
 
     def build_sql_template(self):
         """Build the sql template to do the inserts on the database"""
@@ -169,6 +170,7 @@ class OracleCursor(Cursor):
         for index, column in enumerate(self.columns):
             values_template += f':{index + 1}, '
         values_template = values_template[:-2]
+
         self.columns_str = self.columns_str.replace(',)', ')')
         self.columns_str = str(self.columns).replace("'", '"')
 
@@ -249,6 +251,7 @@ class MysqlCursor(Cursor):
     def __init__(self, database: MysqlDatabase, table_name: str, columns: tuple):
         super().__init__(database, table_name, columns)
         self.cursor = self.database.cursor()
+        self.columns_str = ''
 
     def build_sql_template(self):
         """Build the sql template to do the inserts on the database"""
