@@ -17,7 +17,7 @@ It identify the field from the header fields, so those fields are used to map th
 ## Instalation
 You can install database_loader  by cloning this Git repository
 ```shell script
-$ python -m pip install git+https://github.com/marinellirubens/database_loader#egg=database_loader==1.0.33
+$ python -m pip install git+https://github.com/marinellirubens/database_loader#egg=database_loader==1.0.34
 ```
 
 In order for database_loader to work you will have to install the appropriate database driver.
@@ -70,7 +70,7 @@ Process finished with exit code 0
 ### Check Version
 ```console
 $ database_loader --version
-v1.0.33
+v1.0.34
 ```
 
 #### Loading files on database by TNSNAMES(ORACLE Only)
@@ -80,7 +80,7 @@ $ database_loader --database TESTDB ^
                   --user root ^
                   --password"123456" ^
                   --table tb_salary ^
-                  --file C:\insert_files\insert.tsv ^
+                  --file_load C:\insert_files\insert.tsv ^
                   --commit 5000 ^
                   --type TSV ^
                   --database_type ORACLE ^
@@ -94,7 +94,7 @@ $ database_loader --database TESTDB \
                   --user root \
                   --password"123456" \
                   --table tb_salary \
-                  --file C:\insert_files\insert.tsv \
+                  --file_load C:\insert_files\insert.tsv \
                   --commit 5000 \
                   --type TSV \
                   --database_type ORACLE \
@@ -114,7 +114,7 @@ $ database_loader --connection STRING ^
                   --password"123456" ^
                   --database_type ORACLE ^
                   --table tb_salary ^
-                  --file C:\insert_files\insert.tsv ^
+                  --file_load C:\insert_files\insert.tsv ^
                   --commit 5000 ^
                   --type TSV ^
                   --clean
@@ -130,7 +130,7 @@ $ database_loader --connection STRING \
                   --database_type ORACLE \
                   --password"123456" \
                   --table tb_salary \
-                  --file /insert_files/insert.tsv \
+                  --file_load /insert_files/insert.tsv \
                   --commit 5000 \
                   --type TSV \
                   --clean
