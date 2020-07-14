@@ -15,6 +15,6 @@ setup(
     description='Loader for oracle database',
     install_requires=[
         'pandas',
-        'SQLAlchemy'
+        'SQLAlchemy', 'numpy'
     ]
 )
