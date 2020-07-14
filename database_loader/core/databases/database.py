@@ -1,4 +1,5 @@
 from __future__ import (absolute_import, division, print_function)
+
 __metaclass__ = type
 
 from abc import ABC, abstractmethod
@@ -19,6 +20,7 @@ class SelectDatabase(Enum):
 
 class Database(ABC):
     """Database adaptor abstract class"""
+
     def __init__(self):
         self.cursor = None
 
@@ -53,32 +55,18 @@ class Cursor(ABC):
         self.columns = columns
 
     @abstractmethod
-    def execute_command(self, sql_string: str):
-        """Abstract method to execute a command on the database
-        :param sql_string: command to be executed on the database
-        :type sql_string: str
-        """
+    def execute_command(self):
+        """Abstract method to execute a command on the database"""
         pass
 
     @abstractmethod
-    def executemany_inserts(self, sql_string: str, values: list):
-        """Abstract method to execute many inserts  on the database
-        :param sql_string: command to be executed on the database
-        :type sql_string: str
-        :param values: values to be used on inserts, list of tuples ex.: [(1,2,3), (2,3,4)]
-        :type values: list
-        """
+    def executemany_inserts(self):
+        """Abstract method to execute many inserts  on the database"""
         pass
 
     @abstractmethod
-    def build_sql_template(self, table_name: str, columns: tuple):
-        """Abstract method to build the insert template for insertion
-
-        :param table_name: name of the table
-        :type table_name: str
-        :param columns: column names
-        :type columns: tuple
-        """
+    def build_sql_template(self):
+        """Abstract method to build the insert template for insertion"""
         pass
 
     def clean_table(self):
@@ -92,6 +80,7 @@ class Cursor(ABC):
 
 class OracleDatabase(Database):
     """Class to connect on the Oracle database inherits from Database"""
+
     def __init__(self):
         super().__init__()
         exec('import cx_Oracle')
@@ -158,11 +147,15 @@ class OracleCursor(Cursor):
     :type table_name: str
     :param columns: Column names
     :type columns: tuple
+    :param error_file: Name of the file to save error logs
+    :type error_file: str
     """
-    def __init__(self, database: OracleDatabase, table_name: str, columns: tuple):
+    def __init__(self, database: OracleDatabase, table_name: str, columns: tuple, error_file: str = 'error'):
         super().__init__(database, table_name, columns)
         self.cursor = self.database.cursor()
         self.columns_str = ''
+        self.sql_template = ''
+        self.error_file = f'{table_name}_{error_file}.log'
 
     def build_sql_template(self):
         """Build the sql template to do the inserts on the database"""
@@ -185,18 +178,30 @@ class OracleCursor(Cursor):
         self.cursor.execute(sql_string)
         # TODO: Include errors treatment and log
 
+    def write_errors_log(self, offset, error_message):
+        """
+
+        :param offset:
+        :param error_message:
+        """
+        with open(self.error_file, 'w+') as log_file:
+            log_file.write(f'Row {offset}  has error  {error_message}')
+
     def executemany_inserts(self, values: list):
         """Execute many inserts on the database
 
         :param values: Values to be used on the inserts
         :type values: list
         """
-        self.cursor.executemany(self.sql_template, values)
-        # TODO: Include errors treatment and log
+        self.cursor.executemany(self.sql_template, values, batcherrors=True)
+        batch_errors = self.cursor.getbatcherrors()
+        for errorObj in batch_errors:
+            self.write_errors_log(errorObj.offset, errorObj.message)
 
 
 class MysqlDatabase(Database):
     """Class to connect on the Mysql database inherits from Database"""
+
     def __init__(self):
         super().__init__()
         exec('import mysql.connector')
@@ -247,11 +252,15 @@ class MysqlCursor(Cursor):
     :type table_name: str
     :param columns: Column names
     :type columns: tuple
+    :param error_file: Name of the file to save error logs
+    :type error_file: str
     """
-    def __init__(self, database: MysqlDatabase, table_name: str, columns: tuple):
+
+    def __init__(self, database: MysqlDatabase, table_name: str, columns: tuple, error_file: str = ''):
         super().__init__(database, table_name, columns)
         self.cursor = self.database.cursor()
         self.columns_str = ''
+        self.error_file = error_file
 
     def build_sql_template(self):
         """Build the sql template to do the inserts on the database"""
