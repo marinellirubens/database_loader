@@ -1,16 +1,16 @@
 """Module to load data"""
 from __future__ import (absolute_import, division, print_function)
-__metaclass__ = type
 
-import os
 import argparse
+from argparse import Namespace
 import sys
 from enum import Enum
 import pandas
 import numpy
+import pkg_resources  # part of setuptools
+
 from database_loader.core.databases.builder import CursorBuilder
 from database_loader.core.databases.database import ConnectionType, SelectDatabase, OracleDatabase, MysqlDatabase
-import pkg_resources  # part of setuptools
 
 
 class ReaderType(Enum):
@@ -23,17 +23,32 @@ class ReaderType(Enum):
 class Loader:
     """Class to load the file into database(oracle)
 
+    :param host: Database host name or ip address
+    :type host: str
+    :param port: Host port used by the database
+    :type port: str
     :param commit_amount: Amount of lines that will be commit each time
+    :type commit_amount: int
     :param table_name: table name
+    :type table_name: str
     :param printer: defines if information will be printed
+    :type printer: bool
     :param clean_table: defines if cleans tables before inserts
+    :type clean_table: bool
     :param database: the TNS of the databases
+    :type database: str
     :param user: user name
+    :type user: str
     :param password: user password
+    :type password: str
+    :param database_type: database type (ORACLE, MYSQL)
+    :type database_type: str
+    :param connection_type: Connection type used (TNS, STRING)
+    :type connection_type: str
     """
 
-    def __init__(self, host: str = '', port: str = '', commit_amount: int = 1000, table_name: str = '', printer: bool = False,
-                 clean_table: bool = False, database: str = None, user: str = None,
+    def __init__(self, host: str = '', port: str = '', commit_amount: int = 1000, table_name: str = '',
+                 printer: bool = False, clean_table: bool = False, database: str = None, user: str = None,
                  password: str = None, database_type: str = 'ORACLE', connection_type: str = 'TNS'):
         self.commit_amount = int(commit_amount)
         self.table_name = table_name
@@ -47,13 +62,18 @@ class Loader:
         self.connection_type = connection_type
         self.host = host
         self.port = port
+        self.columns = tuple()
 
-    def read_file(self, file_name, reader=ReaderType.TSV):
-        """Reads the file content"""
-        # file_path = os.path.join(directory, file_name)
+    def read_file(self, file_name: str, reader: ReaderType = ReaderType.TSV):
+        """Reads the file content
+
+        :param file_name: name of the file to be read
+        :type file_name: str
+        :param reader: Reader method that will be used to read the data from file
+        :type reader: ReaderType
+        """
         self.data_frame = reader(file_name).replace(to_replace=numpy.nan, value='')
         self.columns = tuple(self.data_frame.columns.values)
-
 
     def get_cursor(self):
         """Returns the connection with oracle"""
@@ -101,7 +121,9 @@ def get_arguments(args: list = sys.argv[1:]):
     """Parse argument on command line execution
 
     :param args: arguments to be parsed
+    :type args: list
     :return: returns the options parsed
+    :rtype: Namespace
     """
     # TODO: Include output errors file parameter
     parser = argparse.ArgumentParser(description='Parses command.')
@@ -115,8 +137,10 @@ def get_arguments(args: list = sys.argv[1:]):
     parser.add_argument('-p', '--password', help='Database Password', action='store', type=str)
     parser.add_argument('-T', '--type', help='Types CSV, EXCEL, TSV', action='store', type=str, default="TSV")
     parser.add_argument('-V', '--version', help='Show version', action='store_true')
-    parser.add_argument('-B', '--database_type', help='Database type [ORACLE, MYSQL]', action='store', type=str, default="ORACLE")
-    parser.add_argument('-C', '--connection_type', help='Connection type [TNS, STRING]', action='store', type=str, default="TNS")
+    parser.add_argument('-B', '--database_type', help='Database type [ORACLE, MYSQL]', action='store', type=str,
+                        default="ORACLE")
+    parser.add_argument('-C', '--connection_type', help='Connection type [TNS, STRING]', action='store', type=str,
+                        default="TNS")
     parser.add_argument('-H', '--host', help='Database host', action='store', type=str)
     parser.add_argument('-P', '--port', help='Database port', action='store', type=str)
     options = parser.parse_args(args)
@@ -124,6 +148,7 @@ def get_arguments(args: list = sys.argv[1:]):
 
 
 def print_version():
+    """Prints database_loader version"""
     version = pkg_resources.require("database_loader")[0].version
     print(f'v{version}')
     exit(0)
@@ -149,6 +174,7 @@ def main():
 
     loader.read_file(file_name=options.file_load, reader=eval(f'ReaderType.{options.type}'))
     loader.load_into_database()
+
 
 if __name__ == '__main__':
     main()
