@@ -1,9 +1,15 @@
 """Module to test database_loader.core.loader.py methods"""
 from __future__ import (absolute_import, division, print_function)
 
-import builtins
 import sys
+import os
 import pytest
+import builtins
+from unittest import mock
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.insert(0, parent_dir_path)
 
 from database_loader.core import loader
 
