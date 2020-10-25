@@ -5,7 +5,6 @@ import sys
 import os
 import pytest
 import builtins
-from unittest import mock
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
