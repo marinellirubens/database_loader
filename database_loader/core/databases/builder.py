@@ -1,8 +1,12 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from database_loader.core.databases.database import SelectDatabase, ConnectionType, Database
-from database_loader.core.databases.database import OracleDatabase, MysqlDatabase, Cursor
+from database_loader.core.databases.database import SelectDatabase
+from database_loader.core.databases.database import ConnectionType
+from database_loader.core.databases.database import Database
+from database_loader.core.databases.database import OracleDatabase
+from database_loader.core.databases.database import MysqlDatabase
+from database_loader.core.databases.database import Cursor
 
 
 class CursorBuilder:
@@ -22,7 +26,9 @@ class CursorBuilder:
         self.database = eval(database.value)
         return self
 
-    def set_connection_type(self, connection_type: ConnectionType = ConnectionType.STRING):
+    def set_connection_type(
+        self, connection_type: ConnectionType = ConnectionType.STRING
+    ):
         """
 
         :param connection_type:
@@ -30,14 +36,16 @@ class CursorBuilder:
         self.connection_type = connection_type.value
         return self
 
-    def set_connection_string(self, database_name: str, user: str, password, host: str, port: str):
+    def set_connection_string(self, database_name: str, user: str, password,
+                              host: str, port: str):
         if self.connection_type == ConnectionType.STRING.value:
             self.set_query_string(database_name, user, password, host, port)
         else:
             self.set_tns_info(database_name, user, password)
         return self
 
-    def set_query_string(self, database_name: str, user: str, password, host: str, port: str):
+    def set_query_string(self, database_name: str, user: str, password,
+                         host: str, port: str):
         """
 
         :param database_name:
@@ -83,7 +91,11 @@ class CursorBuilder:
         :rtype: Cursor
         """
         if self.connection_type == ConnectionType.TNS.value:
-            self.database.set_connection_by_tns(self.database_name, self.user, self.password)
+            self.database.set_connection_by_tns(
+                self.database_name, self.user, self.password)
         else:
-            self.database.set_connection_by_connection_string(self.user, self.password, self.host, self.port, self.database_name)
+            self.database.set_connection_by_connection_string(
+                self.user, self.password, self.host,
+                self.port, self.database_name
+            )
         return self.database.get_cursor(self.table_name, self.columns)
