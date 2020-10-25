@@ -5,3 +5,4 @@ SQLAlchemy==1.3.18
 mysql-connector-python
 pytest
 pytest-mock
+pytest-cov
