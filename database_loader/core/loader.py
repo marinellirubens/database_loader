@@ -9,7 +9,11 @@ from enum import Enum
 import pandas
 import numpy
 from database_loader.core.databases.builder import CursorBuilder
-from database_loader.core.databases.database import ConnectionType, SelectDatabase, OracleDatabase, MysqlDatabase
+from database_loader.core.databases.database import ConnectionType
+from database_loader.core.databases.database import SelectDatabase
+from database_loader.core.databases.database import ConnectionType
+from database_loader.core.databases.database import MysqlDatabase
+from database_loader.core.databases.database import OracleDatabase
 import pkg_resources  # part of setuptools
 
 
@@ -22,7 +26,6 @@ class ReaderType(Enum):
 
 class Loader:
     """Class to load the file into database(oracle)
-
     :param commit_amount: Amount of lines that will be commit each time
     :param table_name: table name
     :param printer: defines if information will be printed
@@ -31,10 +34,12 @@ class Loader:
     :param user: user name
     :param password: user password
     """
-
-    def __init__(self, host: str = '', port: str = '', commit_amount: int = 1000, table_name: str = '', printer: bool = False,
-                 clean_table: bool = False, database: str = None, user: str = None,
-                 password: str = None, database_type: str = 'ORACLE', connection_type: str = 'TNS'):
+    def __init__(self, host: str = '', port: str = '',
+                 commit_amount: int = 1000, table_name: str = '',
+                 printer: bool = False, clean_table: bool = False,
+                 database: str = None, user: str = None,
+                 password: str = None, database_type: str = 'ORACLE',
+                 connection_type: str = 'TNS'):
         self.commit_amount = int(commit_amount)
         self.table_name = table_name
         self.printer = printer
@@ -51,17 +56,21 @@ class Loader:
     def read_file(self, file_name, reader=ReaderType.TSV):
         """Reads the file content"""
         # file_path = os.path.join(directory, file_name)
-        self.data_frame = reader(file_name).replace(to_replace=numpy.nan, value='')
+        self.data_frame = reader(file_name).replace(to_replace=numpy.nan,
+                                                    value='')
         self.columns = tuple(self.data_frame.columns.values)
-
 
     def get_cursor(self):
         """Returns the connection with oracle"""
         connection = eval(f'ConnectionType.{self.connection_type}')
         cursor_builder = CursorBuilder()
-        cursor_builder.set_database_type(eval(f'SelectDatabase.{self.database_type}'))
+        cursor_builder.set_database_type(
+            eval(f'SelectDatabase.{self.database_type}'))
         cursor_builder.set_connection_type(connection)
-        cursor_builder.set_connection_string(self.tns, self.user, self.password, self.host, self.port)
+        cursor_builder.set_connection_string(self.tns, self.user,
+                                             self.password, self.host,
+                                             self.port)
+
         cursor_builder.set_table_info(self.table_name, self.columns)
         cursor = cursor_builder.build()
         return cursor
@@ -85,7 +94,8 @@ class Loader:
                 cursor.execute_command("commit")
                 insert_values = []
                 if self.printer:
-                    print(f'{index + 1} lines inserted on table {self.table_name}')
+                    print(f'{index + 1} lines inserted on table '
+                          '{self.table_name}')
             # break
         if insert_values:
             cursor.executemany_inserts(insert_values)
@@ -105,20 +115,51 @@ def get_arguments(args: list = sys.argv[1:]):
     """
     # TODO: Include output errors file parameter
     parser = argparse.ArgumentParser(description='Parses command.')
-    parser.add_argument('-c', '--commit', help='Commit every X lines.', action='store', type=int, default=500)
-    parser.add_argument('-t', '--table', help='Table name.', action='store', type=str)
-    parser.add_argument('-v', '--verbose', help='Prints information.', action='store_true')
-    parser.add_argument('-l', '--clean', help='Clean table before inserts.', action='store_true')
-    parser.add_argument('-d', '--database', help='Database TNS.', action='store', type=str)
-    parser.add_argument('-f', '--file_load', help='File to be load on the table', action='store', type=str)
-    parser.add_argument('-u', '--user', help='Database User', action='store', type=str)
-    parser.add_argument('-p', '--password', help='Database Password', action='store', type=str)
-    parser.add_argument('-T', '--type', help='Types CSV, EXCEL, TSV', action='store', type=str, default="TSV")
-    parser.add_argument('-V', '--version', help='Show version', action='store_true')
-    parser.add_argument('-B', '--database_type', help='Database type [ORACLE, MYSQL]', action='store', type=str, default="ORACLE")
-    parser.add_argument('-C', '--connection_type', help='Connection type [TNS, STRING]', action='store', type=str, default="TNS")
-    parser.add_argument('-H', '--host', help='Database host', action='store', type=str)
-    parser.add_argument('-P', '--port', help='Database port', action='store', type=str)
+    parser.add_argument('-c', '--commit', help='Commit every X lines.',
+                        action='store', type=int, default=500)
+
+    parser.add_argument('-t', '--table', help='Table name.',
+                        action='store', type=str)
+
+    parser.add_argument('-v', '--verbose', help='Prints information.',
+                        action='store_true')
+
+    parser.add_argument('-l', '--clean', help='Clean table before inserts.',
+                        action='store_true')
+
+    parser.add_argument('-d', '--database', help='Database TNS.',
+                        action='store', type=str)
+
+    parser.add_argument('-f', '--file_load',
+                        help='File to be load on the table',
+                        action='store', type=str)
+
+    parser.add_argument('-u', '--user', help='Database User',
+                        action='store', type=str)
+
+    parser.add_argument('-p', '--password', help='Database Password',
+                        action='store', type=str)
+
+    parser.add_argument('-T', '--type', help='Types CSV, EXCEL, TSV',
+                        action='store', type=str, default="TSV")
+
+    parser.add_argument('-V', '--version', help='Show version',
+                        action='store_true')
+
+    parser.add_argument('-B', '--database_type',
+                        help='Database type [ORACLE, MYSQL]',
+                        action='store', type=str, default="ORACLE")
+
+    parser.add_argument('-C', '--connection_type',
+                        help='Connection type [TNS, STRING]',
+                        action='store', type=str, default="TNS")
+
+    parser.add_argument('-H', '--host', help='Database host',
+                        action='store', type=str)
+
+    parser.add_argument('-P', '--port', help='Database port',
+                        action='store', type=str)
+
     options = parser.parse_args(args)
     return options
 
@@ -147,8 +188,10 @@ def main():
                     database_type=options.database_type,
                     connection_type=options.connection_type)
 
-    loader.read_file(file_name=options.file_load, reader=eval(f'ReaderType.{options.type}'))
+    loader.read_file(file_name=options.file_load,
+                     reader=eval(f'ReaderType.{options.type}'))
     loader.load_into_database()
+
 
 if __name__ == '__main__':
     main()
