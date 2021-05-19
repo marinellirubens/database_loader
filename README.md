@@ -1,5 +1,6 @@
 
 # Database Loader
+Python Loader to upload files to database using pandas interface
 
 `database_loader` is a module to load information to a database table.
 It identify the field from the header fields, so those fields are used to map the table columns
