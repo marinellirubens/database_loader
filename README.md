@@ -1,23 +1,27 @@
+
 # Database Loader
+Python Loader to upload files to database using pandas interface
+
 `database_loader` is a module to load information to a database table.
-It identify the field from the header fields, so those fields are used to map the table columns 
+It identify the field from the header fields, so those fields are used to map the table columns
 
+## Supported Databases
 
-## Supported Databases:
- - Oracle
- - MySql
+- Oracle
+- MySql
 
+## Formats supported
 
-## Formats supported:
- - EXCEL
- - CSV
- - TSV
-
+- EXCEL
+- CSV
+- TSV
 
 ## Instalation
+
 You can install database_loader  by cloning this Git repository
-```shell script
-$ python -m pip install git+https://github.com/marinellirubens/database_loader#egg=database_loader==1.0.34
+
+```python
+python -m pip install git+https://github.com/marinellirubens/database_loader#egg=database_loader==1.0.34
 ```
 
 In order for database_loader to work you will have to install the appropriate database driver.
@@ -26,12 +30,14 @@ In order for database_loader to work you will have to install the appropriate da
 - Mysql: mysql-connector-python version 8.0.0+
 
 You can install this drivers via ``pip``:
+
 ```console
-$ python -m pip install cx-Oracle
-$ python -m pip install mysql-connector-python
-````
+python -m pip install cx-Oracle
+python -m pip install mysql-connector-python
+```
 
 ## Usage
+
 ```console
 $ database_loader -h
 usage: __main__.py [-h] [-c COMMIT] [-t TABLE] [-v] [-l] [-d DATABASE] [-f FILE_LOAD] [-u USER] [-p PASSWORD]
@@ -67,14 +73,18 @@ Process finished with exit code 0
 ```
 
 ## How to use database_loader
+
 ### Check Version
+
 ```console
 $ database_loader --version
 v1.0.34
 ```
 
 #### Loading files on database by TNSNAMES(ORACLE Only)
+
 Executed on `windows`
+
 ```console
 $ database_loader --database TESTDB ^
                   --user root ^
@@ -89,6 +99,7 @@ $ database_loader --database TESTDB ^
 ```
 
 Executed on `linux`  
+
 ```console
 $ database_loader --database TESTDB \
                   --user root \
@@ -102,9 +113,10 @@ $ database_loader --database TESTDB \
                   --clean
 ```
 
-
 #### Loading files on Oracle database by Connection String
+
 Executed on `windows`
+
 ```console
 $ database_loader --connection STRING ^
                   --database TESTDB ^
@@ -121,6 +133,7 @@ $ database_loader --connection STRING ^
 ```
 
 Executed on `linux`  
+
 ```console
 $ database_loader --connection STRING \
                   --database TESTDB \

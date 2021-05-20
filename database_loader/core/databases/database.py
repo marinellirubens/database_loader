@@ -25,11 +25,13 @@ class Database(ABC):
         self.cursor = None
 
     def set_connection_by_tns(self, *args, **kargs):
-        """set the connection by TNS (Only works on Oracle), returns error if this method is not implemented"""
+        """set the connection by TNS (Only works on Oracle),
+        returns error if this method is not implemented"""
         raise Exception('Connection type not supported on that database')
 
     def set_connection_by_connection_string(self, *args, **kargs):
-        """set the connection by connection string, returns error if this method is not implemented"""
+        """set the connection by connection string, returns error
+        if this method is not implemented"""
         raise Exception('Connection type not supported on that database')
 
     @abstractmethod
@@ -39,8 +41,8 @@ class Database(ABC):
 
 
 class Cursor(ABC):
-    """Cursor to execute queries and commands, this class is and abstraction and should be implemented on the
-    classes that inherits
+    """Cursor to execute queries and commands, this class is and
+    abstraction and should be implemented on the classes that inherits
 
     :param database: Database connection to interact with the database
     :type database: Database
@@ -49,7 +51,8 @@ class Cursor(ABC):
     :param columns: Columns extracted from the file that will be loaed
     :type columns: tuple
     """
-    def __init__(self, database: Database = None, table_name: str = None, columns: tuple = None):
+    def __init__(self, database: Database = None, table_name: str = None,
+                 columns: tuple = None):
         self.database = database
         self.table_name = table_name
         self.columns = columns
@@ -60,8 +63,14 @@ class Cursor(ABC):
         pass
 
     @abstractmethod
-    def executemany_inserts(self):
-        """Abstract method to execute many inserts  on the database"""
+    def executemany_inserts(self, sql_string: str, values: list):
+        """Abstract method to execute many inserts  on the database
+        :param sql_string: command to be executed on the database
+        :type sql_string: str
+        :param values: values to be used on inserts,
+            list of tuples ex.: [(1,2,3), (2,3,4)]
+        :type values: list
+        """
         pass
 
     @abstractmethod
@@ -100,9 +109,12 @@ class OracleDatabase(Database):
         self.user = user
         self.tns = tns
         self.database.connect(self.user, password, self.tns, encoding="UTF-8")
-        self.connection = self.database.connect(self.user, password, self.tns, encoding="UTF-8")
+        self.connection = self.database.connect(self.user, password, self.tns,
+                                                encoding="UTF-8")
 
-    def set_connection_by_connection_string(self, user: str, password: str, host: str, port: str, service_name: str):
+    def set_connection_by_connection_string(self, user: str, password: str,
+                                            host: str, port: str,
+                                            service_name: str):
         """Set connection by connection string
 
         :param user: Database user name
@@ -121,7 +133,8 @@ class OracleDatabase(Database):
         tsn = self.database.makedsn(host, port, service_name=service_name)
         self.tns = tsn
         self.database.connect(self.user, password, self.tns, encoding="UTF-8")
-        self.connection = self.database.connect(self.user, password, self.tns, encoding="UTF-8")
+        self.connection = self.database.connect(self.user, password,
+                                                self.tns, encoding="UTF-8")
 
     def get_cursor(self, table_name: str, columns: tuple):
         """Returns an Oracle cursor to interact with Oracle database
@@ -150,7 +163,8 @@ class OracleCursor(Cursor):
     :param error_file: Name of the file to save error logs
     :type error_file: str
     """
-    def __init__(self, database: OracleDatabase, table_name: str, columns: tuple, error_file: str = 'error'):
+    def __init__(self, database: OracleDatabase, table_name: str,
+                 columns: tuple):
         super().__init__(database, table_name, columns)
         self.cursor = self.database.cursor()
         self.columns_str = ''
@@ -167,7 +181,8 @@ class OracleCursor(Cursor):
         self.columns_str = self.columns_str.replace(',)', ')')
         self.columns_str = str(self.columns).replace("'", '"')
 
-        self.sql_template = f'insert into {self.table_name} {self.columns_str} values ({values_template})'
+        self.sql_template = f'insert into {self.table_name} ' + \
+            '{self.columns_str} values ({values_template})'
 
     def execute_command(self, sql_string: str):
         """Executes a command on the database
@@ -207,7 +222,10 @@ class MysqlDatabase(Database):
         exec('import mysql.connector')
         self.database = eval('mysql.connector')
 
-    def set_connection_by_connection_string(self, user: str, password: str, host: str, port: str, service_name: str):
+    def set_connection_by_connection_string(
+        self, user: str, password: str,
+        host: str, port: str, service_name: str
+    ):
         """Set connection by connection string
 
         :param user: Database user name
@@ -255,8 +273,8 @@ class MysqlCursor(Cursor):
     :param error_file: Name of the file to save error logs
     :type error_file: str
     """
-
-    def __init__(self, database: MysqlDatabase, table_name: str, columns: tuple, error_file: str = ''):
+    def __init__(self, database: MysqlDatabase,
+                 table_name: str, columns: tuple):
         super().__init__(database, table_name, columns)
         self.cursor = self.database.cursor()
         self.columns_str = ''
@@ -270,7 +288,8 @@ class MysqlCursor(Cursor):
         values_template = values_template[:-2]
         self.columns_str = str(self.columns).replace("'", '')
         self.columns_str = self.columns_str.replace(',)', ')')
-        self.sql_template = f'insert into {self.table_name} {self.columns_str} values ({values_template})'
+        self.sql_template = f'insert into {self.table_name} ' + \
+            '{self.columns_str} values ({values_template})'
 
     def execute_command(self, sql_string: str):
         """Executes a command on the database

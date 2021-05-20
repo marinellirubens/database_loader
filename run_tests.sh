@@ -1,0 +1,1 @@
+python3 -m pytest -r chars -vp no:warnings --cov=database_loader --durations=10

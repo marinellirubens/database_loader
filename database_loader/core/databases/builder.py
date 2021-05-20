@@ -1,8 +1,12 @@
 """Module to contain the Builder used for the database connection"""
 from __future__ import (absolute_import, division, print_function)
 
-from database_loader.core.databases.database import SelectDatabase, ConnectionType, Database
-from database_loader.core.databases.database import OracleDatabase, MysqlDatabase, Cursor
+from database_loader.core.databases.database import SelectDatabase
+from database_loader.core.databases.database import ConnectionType
+from database_loader.core.databases.database import Database
+from database_loader.core.databases.database import OracleDatabase
+from database_loader.core.databases.database import MysqlDatabase
+from database_loader.core.databases.database import Cursor
 
 
 class CursorBuilder:
@@ -29,8 +33,10 @@ class CursorBuilder:
         self.database = eval(database.value)
         return self
 
-    def set_connection_type(self, connection_type: ConnectionType = ConnectionType.STRING):
-        """Sets the form of connection (TNS, STRING)
+    def set_connection_type(
+        self, connection_type: ConnectionType = ConnectionType.STRING
+    ):
+        """
 
         :param connection_type: String with the connection type
         :type connection_type: ConnectionType
@@ -124,7 +130,8 @@ class CursorBuilder:
         :rtype: Cursor
         """
         if self.connection_type == ConnectionType.TNS.value:
-            self.database.set_connection_by_tns(self.database_name, self.user, self.password)
+            self.database.set_connection_by_tns(
+                self.database_name, self.user, self.password)
         else:
             self.database.set_connection_by_connection_string(self.user, self.password, self.host,
                                                               self.port, self.database_name)
